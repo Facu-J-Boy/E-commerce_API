@@ -27,6 +27,16 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const singleProduct = await controller.getSingleProduct(id);
+    res.status(200).json(singleProduct);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
