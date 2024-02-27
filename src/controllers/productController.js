@@ -17,4 +17,7 @@ module.exports = {
     });
     await newProduct.save();
   },
+  getAllProducts: async () => {
+    return await Product.find();
+  },
 };
