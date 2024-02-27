@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/productController');
 
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
   const { title, price, category, description, image } = req.body;
   try {
     const newProduct = await controller.createProduct(
@@ -37,11 +37,28 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const deleteProduct = await controller.dropProduct(id);
     res.status(200).json(deleteProduct);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.put('/update/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, price, category, description, image } = req.body;
+  try {
+    const update = await controller.updateProduct(id, {
+      title,
+      price,
+      category,
+      description,
+      image,
+    });
+    res.status(200).json(update);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

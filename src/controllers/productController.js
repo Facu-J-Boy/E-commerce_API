@@ -27,4 +27,17 @@ module.exports = {
     const drop = await Product.deleteOne({ _id: id });
     await drop.deletedCount;
   },
+  updateProduct: async (
+    id,
+    { title, price, category, description, image }
+  ) => {
+    const updateProduct = await Product.findByIdAndUpdate(id, {
+      title,
+      price,
+      category,
+      description,
+      image,
+    });
+    await updateProduct.save();
+  },
 };
