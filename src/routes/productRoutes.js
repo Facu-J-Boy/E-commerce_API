@@ -27,4 +27,14 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteProduct = await controller.dropProduct(id);
+    res.status(200).json(deleteProduct);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 module.exports = router;

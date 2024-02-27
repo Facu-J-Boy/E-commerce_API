@@ -20,4 +20,8 @@ module.exports = {
   getAllProducts: async () => {
     return await Product.find();
   },
+  dropProduct: async (id) => {
+    const drop = await Product.deleteOne({ _id: id });
+    await drop.deletedCount;
+  },
 };
