@@ -17,8 +17,18 @@ router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
   try {
-    const update = await controller.updateComment(id, text);
+    const update = await controller.updateReview(id, text);
     res.status(200).json(update);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.delete('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteReview = await controller.dropReview(id);
+    res.status(200).json(deleteReview);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

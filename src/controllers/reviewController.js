@@ -16,8 +16,12 @@ module.exports = {
     });
     return newReview; // Devolver el nuevo comentario creado
   },
-  updateComment: async (id, text) => {
+  updateReview: async (id, text) => {
     const updateReview = await Review.findByIdAndUpdate(id, { text });
     await updateReview.save();
+  },
+  dropReview: async (id) => {
+    const drop = await Review.deleteOne({ _id: id });
+    await drop.deletedCount;
   },
 };
