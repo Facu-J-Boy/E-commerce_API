@@ -22,6 +22,7 @@ const Product = new Schema({
     type: String,
     required: true,
   },
+  review: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 });
 
 module.exports = model('Product', Product);

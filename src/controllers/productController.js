@@ -21,7 +21,7 @@ module.exports = {
     return await Product.find();
   },
   getSingleProduct: async (id) => {
-    return await Product.findById(id);
+    return await Product.findById(id).populate('review');
   },
   dropProduct: async (id) => {
     const drop = await Product.deleteOne({ _id: id });
