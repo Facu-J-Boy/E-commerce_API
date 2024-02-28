@@ -18,7 +18,7 @@ module.exports = {
     await newProduct.save();
   },
   getAllProducts: async () => {
-    return await Product.find();
+    return await Product.find({}, { review: 0 });
   },
   getSingleProduct: async (id) => {
     return await Product.findById(id).populate('review');
