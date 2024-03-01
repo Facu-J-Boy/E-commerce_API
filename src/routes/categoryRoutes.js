@@ -12,4 +12,13 @@ router.post('/create', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const allCategory = await controller.getAllCategory();
+    res.status(200).json(allCategory);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 module.exports = router;
