@@ -49,14 +49,14 @@ router.delete('/delete/:id', async (req, res) => {
 
 router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, price, category, description, image } = req.body;
+  const { title, price, description, image, categoryId } = req.body;
   try {
     const update = await controller.updateProduct(id, {
       title,
       price,
-      category,
       description,
       image,
+      categoryId,
     });
     res.status(200).json(update);
   } catch (error) {

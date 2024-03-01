@@ -31,15 +31,19 @@ module.exports = {
   },
   updateProduct: async (
     id,
-    { title, price, category, description, image }
+    { title, price, description, image, categoryId }
   ) => {
-    const updateProduct = await Product.findByIdAndUpdate(id, {
-      title,
-      price,
-      category,
-      description,
-      image,
-    });
+    const updateProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        title,
+        price,
+        description,
+        image,
+        category: categoryId,
+      },
+      { new: true }
+    );
     await updateProduct.save();
   },
 };
