@@ -8,4 +8,14 @@ module.exports = {
   getAllCategory: async () => {
     return await Category.find();
   },
+  dropCategory: async (id) => {
+    const drop = await Category.deleteOne({ _id: id });
+    await drop.deletedCount;
+  },
+  updateCategory: async (id, { name }) => {
+    const updateCategory = await Category.findByIdAndUpdate(id, {
+      name,
+    });
+    await updateCategory.save();
+  },
 };

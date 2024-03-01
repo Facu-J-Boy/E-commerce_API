@@ -18,7 +18,7 @@ module.exports = {
     await newProduct.save();
   },
   getAllProducts: async () => {
-    return await Product.find({}, { review: 0, category: 0 }); // trae todos los productos excluyendo sus reviews y category
+    return await Product.find({}, { review: 0, category: 0 }); // Trae todos los productos excluyendo sus reviews y category
   },
   getSingleProduct: async (id) => {
     return await Product.findById(id)
