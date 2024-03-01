@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 const dbURI = 'mongodb://localhost:27017/e-commerce';
 
 // Configuración de la conexión
-mongoose.connect(dbURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(dbURI);
 
 // Manejador de eventos para la conexión exitosa
 mongoose.connection.on('connected', () => {
