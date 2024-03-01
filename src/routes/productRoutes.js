@@ -3,14 +3,14 @@ const router = express.Router();
 const controller = require('../controllers/productController');
 
 router.post('/create', async (req, res) => {
-  const { title, price, category, description, image } = req.body;
+  const { title, price, description, image, categoryId } = req.body;
   try {
     const newProduct = await controller.createProduct(
       title,
       price,
-      category,
       description,
-      image
+      image,
+      categoryId
     );
     res.status(200).json(newProduct);
   } catch (error) {

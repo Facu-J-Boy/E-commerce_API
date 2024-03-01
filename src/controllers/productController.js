@@ -4,21 +4,21 @@ module.exports = {
   createProduct: async (
     title,
     price,
-    category,
     description,
-    image
+    image,
+    categoryId
   ) => {
     const newProduct = new Product({
       title,
       price,
-      category,
       description,
       image,
+      category: categoryId,
     });
     await newProduct.save();
   },
   getAllProducts: async () => {
-    return await Product.find({}, { review: 0 });
+    return await Product.find({}, { review: 0 }).populate('category');
   },
   getSingleProduct: async (id) => {
     return await Product.findById(id).populate('review');

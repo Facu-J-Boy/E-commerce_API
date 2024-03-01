@@ -10,10 +10,6 @@ const Product = new Schema({
     type: Number,
     required: true,
   },
-  category: {
-    type: String,
-    required: true,
-  },
   description: {
     type: String,
     required: true,
@@ -22,6 +18,7 @@ const Product = new Schema({
     type: String,
     required: true,
   },
+  category: { type: Schema.Types.ObjectId, ref: 'Category' },
   review: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 });
 
