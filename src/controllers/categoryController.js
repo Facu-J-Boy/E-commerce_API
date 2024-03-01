@@ -5,4 +5,7 @@ model.exports = {
     const newCategory = new Category({ name });
     await newCategory.save();
   },
+  getAllCategory: async () => {
+    return await Category.find();
+  },
 };
