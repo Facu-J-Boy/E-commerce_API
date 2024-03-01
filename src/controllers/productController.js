@@ -18,10 +18,12 @@ module.exports = {
     await newProduct.save();
   },
   getAllProducts: async () => {
-    return await Product.find({}, { review: 0 }).populate('category');
+    return await Product.find({}, { review: 0, category: 0 }); // trae todos los productos excluyendo sus reviews y category
   },
   getSingleProduct: async (id) => {
-    return await Product.findById(id).populate('review');
+    return await Product.findById(id)
+      .populate('review')
+      .populate('category');
   },
   dropProduct: async (id) => {
     const drop = await Product.deleteOne({ _id: id });
