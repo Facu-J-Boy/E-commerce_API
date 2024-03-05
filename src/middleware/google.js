@@ -44,3 +44,18 @@ passport.use(
     }
   )
 );
+
+// Configuración de Passport.js para serialización y deserialización de usuario
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((err) => {
+      done(err);
+    });
+});

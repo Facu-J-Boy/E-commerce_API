@@ -1,6 +1,5 @@
 const { Router } = require('express');
 require('../middleware/google');
-const passport = require('passport');
 // Importar todos los routers;
 
 const productMiddleware = require('./productRoutes');
@@ -15,16 +14,6 @@ const router = Router();
 router.use('/product', productMiddleware);
 router.use('/review', reviewMiddleware);
 router.use('/category', categoryMiddleware);
-router.use(
-  '/user',
-  passport.authenticate('auth-google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email',
-    ],
-    session: false,
-  }),
-  userMiddleware
-);
+router.use('/user', userMiddleware);
 
 module.exports = router;
