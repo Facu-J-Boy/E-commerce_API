@@ -4,6 +4,16 @@ const passport = require('passport');
 const User = require('../models/User');
 const controller = require('../controllers/userController');
 
+async function newSession(req, res, id) {
+  // Función para guardar un usuario en la session
+  try {
+    const user = await User.findById(id);
+    req.session.user = user;
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+}
+
 router.get(
   '/google',
   passport.authenticate('auth-google', {
@@ -48,7 +58,23 @@ router.post('/signup', async (req, res) => {
         email,
         password,
       });
+      await newSession(req, res, newUser._id);
       res.status(200).json(newUser);
+    }
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+});
+
+router.get('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await controller.findUser({ email, password });
+    if (!user) {
+      res.status(401).json({ error: 'this user does not exist' });
+    } else {
+      await newSession(req, res, user._id);
+      res.status(200).json(user);
     }
   } catch (err) {
     res.status(401).json({ error: err.message });
@@ -61,6 +87,7 @@ router.get('/profile', async (req, res) => {
     res.status(200).json(user);
   } else {
     res.status(401).json({});
+    n;
   }
 });
 

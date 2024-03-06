@@ -12,9 +12,8 @@ module.exports = {
     const user = await User.findOne({ email });
     return user;
   },
-  findUser: async ({ name, email, password }) => {
+  findUser: async ({ email, password }) => {
     const user = await User.findOne({
-      name,
       email,
     });
     if (!user) {
