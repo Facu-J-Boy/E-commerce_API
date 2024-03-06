@@ -24,15 +24,4 @@ app.use(passport.session());
 app.use(morgan('dev'));
 app.use('/', routes);
 
-// // Configuración de Passport.js para serialización y deserialización de usuario
-// passport.serializeUser((user, done) => {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser((id, done) => {
-//   User.findById(id, (err, user) => {
-//     done(err, user);
-//   });
-// });
-
 module.exports = app;

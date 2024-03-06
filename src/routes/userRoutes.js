@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../models/User');
+const controller = require('../controllers/userController');
 
 router.get(
   '/google',
@@ -30,6 +31,27 @@ router.post('/session/:id', async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(401).json({ error: error.message });
+  }
+});
+
+router.post('/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    const findUser = await controller.findUserForEmail({
+      email,
+    });
+    if (findUser) {
+      res.status(402).json({ error: 'existing user' });
+    } else {
+      const newUser = await controller.createUser({
+        name,
+        email,
+        password,
+      });
+      res.status(200).json(newUser);
+    }
+  } catch (err) {
+    res.status(401).json({ error: err.message });
   }
 });
 
