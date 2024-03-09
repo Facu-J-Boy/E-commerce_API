@@ -1,16 +1,27 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
+const {
+  verifyPassword,
+  hashPassword,
+} = require('../middleware/password');
 
 module.exports = {
+  // hashPassword: (password) => {
+  //   return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  // },
+  // verifyPassword: (password, hashedPassword) => {
+  //   // Comparar la contraseña con el hash almacenado
+  //   return bcrypt.compareSync(password, hashedPassword);
+  // },
   createUser: async ({ name, email, password }) => {
-    const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashPassword });
+    const hashedPassword = hashPassword(password);
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
     await newUser.save();
     return newUser;
-  },
-  findUserForEmail: async ({ email }) => {
-    const user = await User.findOne({ email });
-    return user;
   },
   findUser: async ({ email, password }) => {
     const user = await User.findOne({
@@ -19,12 +30,16 @@ module.exports = {
     if (!user) {
       return null;
     }
-    const passwordMatch = await bcrypt.compare(
+    const passwordMatch = verifyPassword(
       password,
-      user.password
+      hashPassword(password)
     );
     if (passwordMatch) {
       return user;
     }
+  },
+  findUserForEmail: async ({ email }) => {
+    const user = await User.findOne({ email });
+    return user;
   },
 };
