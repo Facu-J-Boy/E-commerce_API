@@ -1,18 +1,10 @@
 const User = require('../models/User');
-// const bcrypt = require('bcrypt');
 const {
   verifyPassword,
   hashPassword,
 } = require('../middleware/password');
 
 module.exports = {
-  // hashPassword: (password) => {
-  //   return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  // },
-  // verifyPassword: (password, hashedPassword) => {
-  //   // Comparar la contraseña con el hash almacenado
-  //   return bcrypt.compareSync(password, hashedPassword);
-  // },
   createUser: async ({ name, email, password }) => {
     const hashedPassword = hashPassword(password);
     const newUser = new User({
