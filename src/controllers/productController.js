@@ -1,13 +1,13 @@
 const Product = require('../models/Product');
 
 module.exports = {
-  createProduct: async (
+  createProduct: async ({
     title,
     price,
     description,
     image,
-    categoryId
-  ) => {
+    categoryId,
+  }) => {
     const newProduct = new Product({
       title,
       price,

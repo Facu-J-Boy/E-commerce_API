@@ -1,17 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/productController');
+const { upload } = require('../config/multerConfig');
 
-router.post('/create', async (req, res) => {
-  const { title, price, description, image, categoryId } = req.body;
+router.post('/create', upload, async (req, res) => {
+  const { title, price, description, categoryId } = req.body;
   try {
-    const newProduct = await controller.createProduct(
+    const imagePath = req.file.path;
+    console.log('imagePath: ', imagePath);
+    const newProduct = await controller.createProduct({
       title,
       price,
       description,
-      image,
-      categoryId
-    );
+      image: imagePath,
+      categoryId,
+    });
     res.status(200).json(newProduct);
   } catch (error) {
     res.status(404).json({ error: error.message });
