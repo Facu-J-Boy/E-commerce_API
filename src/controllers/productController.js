@@ -1,6 +1,4 @@
 const fs = require('fs');
-// const path = require('path');
-// const { v4: uuidv4 } = require('uuid');
 const Product = require('../models/Product');
 
 module.exports = {
@@ -39,23 +37,38 @@ module.exports = {
     // Buscar el producto actual en la base de datos
     const product = await Product.findById(id);
 
-    // Actualizar la información del producto en la base de datos
-    await Product.findByIdAndUpdate(id, {
-      title,
-      description,
-      price,
-      category: categoryId,
-      // Si se cargó una nueva imagen, actualizar la ruta de la imagen
-      ...(image && { image: image }),
-    });
+    if (!product) {
+      fs.unlinkSync(image);
+      return {
+        status: 401,
+        type: 'error',
+        message: 'Product not found',
+      };
+    } else {
+      // Actualizar la información del producto en la base de datos
+      await Product.findByIdAndUpdate(id, {
+        title,
+        description,
+        price,
+        category: categoryId,
+        // Si se cargó una nueva imagen, actualizar la ruta de la imagen
+        ...(image && { image: image }),
+      });
 
-    // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
-    if (image && product.image) {
-      // Eliminar la imagen anterior del sistema de archivos
-      fs.unlinkSync(product.image);
+      // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
+      if (image && product.image) {
+        // Eliminar la imagen anterior del sistema de archivos
+        fs.unlinkSync(product.image);
+      }
+
+      // Guardar los cambios en la base de datos
+      await product.save();
+
+      return {
+        status: 200,
+        type: 'success',
+        message: 'Product updated',
+      };
     }
-
-    // Guardar los cambios en la base de datos
-    await product.save();
   },
 };
