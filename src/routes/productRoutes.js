@@ -7,7 +7,6 @@ router.post('/create', upload, async (req, res) => {
   const { title, price, description, categoryId } = req.body;
   try {
     const imagePath = req.file.path;
-    console.log('imagePath: ', imagePath);
     const newProduct = await controller.createProduct({
       title,
       price,
@@ -50,15 +49,16 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', upload, async (req, res) => {
   const { id } = req.params;
-  const { title, price, description, image, categoryId } = req.body;
+  const { title, price, description, categoryId } = req.body;
   try {
+    const imagePath = req.file.path;
     const update = await controller.updateProduct(id, {
       title,
       price,
       description,
-      image,
+      image: imagePath,
       categoryId,
     });
     res.status(200).json(update);

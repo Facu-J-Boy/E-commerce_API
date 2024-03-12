@@ -1,3 +1,6 @@
+const fs = require('fs');
+// const path = require('path');
+// const { v4: uuidv4 } = require('uuid');
 const Product = require('../models/Product');
 
 module.exports = {
@@ -33,17 +36,26 @@ module.exports = {
     id,
     { title, price, description, image, categoryId }
   ) => {
-    const updateProduct = await Product.findByIdAndUpdate(
-      id,
-      {
-        title,
-        price,
-        description,
-        image,
-        category: categoryId,
-      },
-      { new: true }
-    );
-    await updateProduct.save();
+    // Buscar el producto actual en la base de datos
+    const product = await Product.findById(id);
+
+    // Actualizar la información del producto en la base de datos
+    await Product.findByIdAndUpdate(id, {
+      title,
+      description,
+      price,
+      category: categoryId,
+      // Si se cargó una nueva imagen, actualizar la ruta de la imagen
+      ...(image && { image: image }),
+    });
+
+    // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
+    if (image && product.image) {
+      // Eliminar la imagen anterior del sistema de archivos
+      fs.unlinkSync(product.image);
+    }
+
+    // Guardar los cambios en la base de datos
+    await product.save();
   },
 };
