@@ -43,7 +43,12 @@ router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const deleteProduct = await controller.dropProduct(id);
-    res.status(200).json(deleteProduct);
+    res
+      .status(deleteProduct.status)
+      .json({
+        type: deleteProduct.type,
+        message: deleteProduct.message,
+      });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

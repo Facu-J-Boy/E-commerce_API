@@ -27,8 +27,28 @@ module.exports = {
       .populate('category');
   },
   dropProduct: async (id) => {
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return {
+        status: 401,
+        type: 'error',
+        message: 'Product not found',
+      };
+    }
+    // Eliminar la imagen asociada del sistema de archivos
+    if (product.image) {
+      fs.unlinkSync(product.image);
+    }
+
+    // Eliminar el producto de la base de datos
     const drop = await Product.deleteOne({ _id: id });
     await drop.deletedCount;
+    return {
+      status: 200,
+      type: 'success',
+      message: 'Product deleted',
+    };
   },
   updateProduct: async (
     id,
