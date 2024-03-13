@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/productController');
 const { upload } = require('../config/multerConfig');
 
-router.post('/create', async (req, res) => {
+router.post('/create', upload, async (req, res) => {
   const { title, price, description, categoryId } = req.body;
   try {
     const imagePath = req.file.path;
@@ -20,7 +20,7 @@ router.post('/create', async (req, res) => {
   }
 });
 
-router.get('/', upload, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const allproducts = await controller.getAllProducts();
     res.status(200).json(allproducts);
@@ -43,12 +43,10 @@ router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const deleteProduct = await controller.dropProduct(id);
-    res
-      .status(deleteProduct.status)
-      .json({
-        type: deleteProduct.type,
-        message: deleteProduct.message,
-      });
+    res.status(deleteProduct.status).json({
+      type: deleteProduct.type,
+      message: deleteProduct.message,
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
