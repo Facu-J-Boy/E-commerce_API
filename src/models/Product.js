@@ -10,6 +10,10 @@ const Product = new Schema({
     type: Number,
     required: true,
   },
+  rating: {
+    type: Number,
+    default: 5,
+  },
   description: {
     type: String,
     required: true,

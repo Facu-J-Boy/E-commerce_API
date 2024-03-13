@@ -6,6 +6,10 @@ const Review = new Schema({
     type: String,
     required: true,
   },
+  rating: {
+    type: Number,
+    required: true,
+  },
   product: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 

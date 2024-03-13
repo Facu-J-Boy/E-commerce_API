@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 module.exports = {
   createProduct: async ({
@@ -90,5 +91,19 @@ module.exports = {
         message: 'Product updated',
       };
     }
+  },
+  updateProductRating: async (id) => {
+    const reviews = await Review.find({ product: id });
+    if (reviews.length === 0) {
+      return;
+    }
+    const totalRating = reviews.reduce(
+      (acc, review) => acc + review.rating,
+      0
+    );
+    const averageRating = totalRating / reviews.length;
+    await Product.findByIdAndUpdate(id, {
+      rating: averageRating.toFixed(1),
+    });
   },
 };
