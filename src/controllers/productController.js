@@ -42,8 +42,11 @@ module.exports = {
       fs.unlinkSync(product.image);
     }
 
+    // Eliminar todas las reviews asociadas con el producto
+    await Review.deleteMany({ product: id });
+
     // Eliminar el producto de la base de datos
-    const drop = await Product.deleteOne({ _id: id });
+    const drop = await Product.findByIdAndDelete(id);
     await drop.deletedCount;
     return {
       status: 200,

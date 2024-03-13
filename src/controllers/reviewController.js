@@ -20,16 +20,18 @@ module.exports = {
     return newReview; // Devolver el nuevo comentario creado
   },
   updateReview: async (id, text, rating) => {
+    const review = await Review.findById(id);
     const updateReview = await Review.findByIdAndUpdate(id, {
       text,
       rating,
     });
     await updateReview.save();
-    await controller.updateProductRating(id);
+    await controller.updateProductRating(review.product);
   },
   dropReview: async (id) => {
+    const review = await Review.findById(id);
     const drop = await Review.deleteOne({ _id: id });
     await drop.deletedCount;
-    await controller.updateProductRating(id);
+    await controller.updateProductRating(review.product);
   },
 };
