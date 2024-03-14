@@ -19,8 +19,28 @@ module.exports = {
     });
     await newProduct.save();
   },
-  getAllProducts: async () => {
-    return await Product.find({}, { review: 0, category: 0 }); // Trae todos los productos excluyendo sus reviews y category
+  getAllProductsWithPagination: async (Page, Limit, title) => {
+    // Parámetros de paginación
+    const page = parseInt(Page) || 1;
+    const limit = parseInt(Limit) || 10;
+    const skip = (page - 1) * limit;
+    // Trae todos los productos excluyendo sus reviews y category
+    const products = await Product.find(
+      { title: { $regex: title, $options: 'i' } },
+      { review: 0, category: 0 }
+    )
+      .skip(skip)
+      .limit(limit);
+    // Calcular el número total de productos
+    const totalCount = await Product.countDocuments({
+      title: { $regex: title, $options: 'i' },
+    });
+    return {
+      products,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+      totalCount,
+    };
   },
   getSingleProduct: async (id) => {
     return await Product.findById(id)

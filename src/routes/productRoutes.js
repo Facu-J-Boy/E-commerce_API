@@ -21,8 +21,15 @@ router.post('/create', upload, async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
+  const { page } = req.query;
+  const { limit } = req.query;
+  const { title } = req.query;
   try {
-    const allproducts = await controller.getAllProducts();
+    const allproducts = await controller.getAllProductsWithPagination(
+      page,
+      limit,
+      title
+    );
     res.status(200).json(allproducts);
   } catch (error) {
     res.status(404).json({ error: error.message });
