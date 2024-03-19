@@ -19,6 +19,9 @@ module.exports = {
     await controller.updateProductRating(id);
     return newReview; // Devolver el nuevo comentario creado
   },
+  getReviews: async (id) => {
+    return await Review.find({ product: id });
+  },
   updateReview: async (id, text, rating) => {
     const review = await Review.findById(id);
     const updateReview = await Review.findByIdAndUpdate(id, {

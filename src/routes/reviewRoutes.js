@@ -13,6 +13,16 @@ router.post('/new/:id', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const reviews = await controller.getReviews(id);
+    res.status(200).json(reviews.reverse());
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
   const { text, rating } = req.body;
