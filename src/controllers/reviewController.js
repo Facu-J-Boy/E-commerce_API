@@ -20,7 +20,7 @@ module.exports = {
     return newReview; // Devolver el nuevo comentario creado
   },
   getReviews: async (id) => {
-    return await Review.find({ product: id });
+    return await Review.find({ product: id }, { product: 0 });
   },
   updateReview: async (id, text, rating) => {
     const review = await Review.findById(id);
