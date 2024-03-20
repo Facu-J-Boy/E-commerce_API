@@ -6,6 +6,7 @@ module.exports = {
       user: userId,
     });
     await newCart.save();
+    return newCart;
   },
   addToCart: async (userId, productId) => {
     const cart = Cart.findOne({ user: userId });
@@ -13,6 +14,7 @@ module.exports = {
     cart.products.push(productId);
     // Guardar el carrito actualizado
     await cart.save();
+    return cart;
   },
   showCart: async (userId) => {
     return Cart.findOne({ user: userId }).populate('product');
