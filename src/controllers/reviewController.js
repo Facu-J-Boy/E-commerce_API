@@ -19,8 +19,25 @@ module.exports = {
     await controller.updateProductRating(id);
     return newReview; // Devolver el nuevo comentario creado
   },
-  getReviews: async (id) => {
-    return await Review.find({ product: id }, { product: 0 });
+  getReviews: async (id, Page, Limit) => {
+    // Parámetros de paginación
+    const page = parseInt(Page) || 1;
+    const limit = parseInt(Limit) || 10;
+    const skip = (page - 1) * limit;
+    const reviews = await Review.find({ product: id }, { product: 0 })
+      .skip(skip)
+      .limit(limit);
+
+    // Calcular el número total de reviews
+    const totalCount = await Review.countDocuments({
+      product: id,
+    });
+    return {
+      reviews,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+      totalCount,
+    };
   },
   updateReview: async (id, text, rating) => {
     const review = await Review.findById(id);

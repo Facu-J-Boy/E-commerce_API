@@ -15,9 +15,11 @@ router.post('/new/:id', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
+  const { page } = req.query;
+  const { limit } = req.query;
   try {
-    const reviews = await controller.getReviews(id);
-    res.status(200).json(reviews.reverse());
+    const reviews = await controller.getReviews(id, page, limit);
+    res.status(200).json(reviews);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
