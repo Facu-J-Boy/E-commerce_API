@@ -43,9 +43,7 @@ module.exports = {
     };
   },
   getSingleProduct: async (id) => {
-    return await Product.findById(id, { review: 0 }).populate(
-      'category'
-    );
+    return await Product.findById(id).populate('category');
   },
   dropProduct: async (id) => {
     const product = await Product.findById(id);

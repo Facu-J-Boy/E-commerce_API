@@ -24,7 +24,6 @@ const Product = new Schema(
       required: true,
     },
     category: { type: Schema.Types.ObjectId, ref: 'Category' },
-    review: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
   },
   { versionKey: false }
 );

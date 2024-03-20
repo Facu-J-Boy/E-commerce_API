@@ -9,14 +9,14 @@ module.exports = {
     return newCart;
   },
   addToCart: async (userId, productId) => {
-    const cart = Cart.findOne({ user: userId });
+    const cart = await Cart.findOne({ user: userId });
     // Agregar el producto al carrito
     cart.products.push(productId);
     // Guardar el carrito actualizado
     await cart.save();
-    return cart;
+    return cart.populate('products');
   },
   showCart: async (userId) => {
-    return Cart.findOne({ user: userId }).populate('product');
+    return await Cart.findOne({ user: userId }).populate('products');
   },
 };
