@@ -16,6 +16,17 @@ module.exports = {
     await cart.save();
     return cart.populate('products');
   },
+  removeFromCart: async (userId, productId) => {
+    const cart = await Cart.findOne({ user: userId });
+    // Eliminar el producto del carrito
+    cart.products = cart.products.filter(
+      (prodId) => prodId.toString() !== productId
+    );
+
+    // Guardar el carrito actualizado
+    await cart.save();
+    return cart.populate('products');
+  },
   showCart: async (userId) => {
     return await Cart.findOne({ user: userId }).populate('products');
   },

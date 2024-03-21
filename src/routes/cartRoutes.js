@@ -22,6 +22,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.delete('/remove/:userId/:productId', async (req, res) => {
+  const { userId, productId } = req.params;
+  try {
+    const cart = await controller.removeFromCart(userId, productId);
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
