@@ -1,12 +1,19 @@
 const Cart = require('../models/Cart');
 
 module.exports = {
-  createCart: async (userId) => {
-    const newCart = new Cart({
-      user: userId,
-    });
-    await newCart.save();
-    return newCart;
+  getCart: async (userId) => {
+    const cart = await Cart.findOne({ user: userId }).populate(
+      'products'
+    );
+    if (!cart) {
+      const newCart = new Cart({
+        user: userId,
+      });
+      await newCart.save();
+      return newCart;
+    } else {
+      return cart;
+    }
   },
   addToCart: async (userId, productId) => {
     const cart = await Cart.findOne({ user: userId });
@@ -26,8 +33,5 @@ module.exports = {
     // Guardar el carrito actualizado
     await cart.save();
     return cart.populate('products');
-  },
-  showCart: async (userId) => {
-    return await Cart.findOne({ user: userId }).populate('products');
   },
 };
