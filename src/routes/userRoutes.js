@@ -7,7 +7,7 @@ const controller = require('../controllers/userController');
 async function newSession(req, res, id) {
   // Función para guardar un usuario en la session
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id, { password: 0 });
     req.session.user = user;
   } catch (error) {
     res.status(401).json({ error: error.message });

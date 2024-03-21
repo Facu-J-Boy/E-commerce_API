@@ -13,12 +13,20 @@ module.exports = {
       password: hashedPassword,
     });
     await newUser.save();
-    return newUser;
+    // Devolvemos el usuario sin la contraseña
+    return newUser.toJSON({
+      transform: function (doc, ret) {
+        delete ret.password;
+      },
+    });
   },
   findUser: async ({ email, password }) => {
-    const user = await User.findOne({
-      email,
-    });
+    const user = await User.findOne(
+      {
+        email,
+      },
+      { password: 0 }
+    );
     if (!user) {
       return null;
     }
