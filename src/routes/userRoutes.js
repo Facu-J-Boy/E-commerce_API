@@ -3,6 +3,9 @@ const router = express.Router();
 const passport = require('passport');
 const User = require('../models/User');
 const controller = require('../controllers/userController');
+require('dotenv').config();
+
+const { COOKIE_NAME } = process.env;
 
 async function newSession(req, res, id) {
   // Función para guardar un usuario en la session
@@ -78,6 +81,15 @@ router.get('/login', async (req, res) => {
     }
   } catch (err) {
     res.status(401).json({ error: err.message });
+  }
+});
+
+router.get('/logout', (req, res) => {
+  try {
+    res.clearCookie(COOKIE_NAME);
+    res.status(200).send('logout');
+  } catch (error) {
+    res.status(404).json({ error: error.message });
   }
 });
 

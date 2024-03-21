@@ -6,7 +6,7 @@ const passport = require('passport');
 const session = require('express-session');
 require('dotenv').config();
 
-const { SESSION_SECRET } = process.env;
+const { SESSION_SECRET, COOKIE_NAME } = process.env;
 
 require('./db.js');
 
@@ -20,6 +20,7 @@ app.use(
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    name: COOKIE_NAME,
   })
 );
 app.use(passport.initialize());
