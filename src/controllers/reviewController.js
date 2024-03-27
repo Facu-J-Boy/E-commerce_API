@@ -3,20 +3,21 @@ const Product = require('../models/Product');
 const controller = require('./productController');
 
 module.exports = {
-  createReview: async (id, text, rating) => {
+  createReview: async (productId, userId, text, rating) => {
     // Crear un nuevo comentario
     const newReview = new Review({
       text,
       rating,
-      product: id, // Asociar el comentario al producto
+      user: userId,
+      product: productId, // Asociar el comentario al producto
     });
     // Guardar el comentario en la base de datos
     await newReview.save();
     // Agregar el ID del comentario al array de comentarios del producto
-    await Product.findByIdAndUpdate(id, {
+    await Product.findByIdAndUpdate(productId, {
       $push: { review: newReview._id },
     });
-    await controller.updateProductRating(id);
+    await controller.updateProductRating(productId);
     return newReview; // Devolver el nuevo comentario creado
   },
   getReviews: async (id, Page, Limit) => {

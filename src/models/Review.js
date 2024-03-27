@@ -11,6 +11,7 @@ const Review = new Schema(
       type: Number,
       required: true,
     },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     product: { type: Schema.Types.ObjectId, ref: 'Product' },
   },
   { versionKey: false }
