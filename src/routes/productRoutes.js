@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/productController');
 const { upload } = require('../config/multerConfig');
+const categoryController = require('../controllers/categoryController');
+const { category, products } = require('../controllers/products');
 
 router.post('/create', upload, async (req, res) => {
   const { title, price, description, categoryId } = req.body;
@@ -15,6 +17,37 @@ router.post('/create', upload, async (req, res) => {
       categoryId,
     });
     res.status(200).json(newProduct);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.post('/bulckcreate', async (req, res) => {
+  try {
+    category.map(async (category) => {
+      await categoryController.createCategory(category);
+    });
+    products.map(async (product) => {
+      await controller.bulckCreateProduct({
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        image: product.image,
+        categoryName: product.category,
+      });
+    });
+    res.status(200).json({ message: 'Product created' });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.delete('/bulckdelete', async (req, res) => {
+  try {
+    await controller.deleteAll();
+    res
+      .status(200)
+      .json({ message: 'All products and categories deleted' });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

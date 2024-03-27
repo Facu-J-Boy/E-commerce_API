@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
+const Category = require('../models/Category');
 
 module.exports = {
   createProduct: async ({
@@ -18,6 +19,27 @@ module.exports = {
       category: categoryId,
     });
     await newProduct.save();
+  },
+  bulckCreateProduct: async ({
+    title,
+    price,
+    description,
+    image,
+    categoryName,
+  }) => {
+    const category = await Category.findOne({ name: categoryName });
+    const newProduct = new Product({
+      title,
+      price,
+      description,
+      image,
+      category: category._id,
+    });
+    await newProduct.save();
+  },
+  deleteAll: async () => {
+    await Category.deleteMany({});
+    await Product.deleteMany({});
   },
   getAllProductsWithPagination: async (Page, Limit, title) => {
     // Parámetros de paginación
