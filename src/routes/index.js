@@ -16,7 +16,11 @@ const router = Router();
 router.use('/product', verifyToken, productMiddleware);
 router.use('/review', verifyToken, reviewMiddleware);
 router.use('/category', verifyToken, categoryMiddleware);
-router.use('/user', verifyToken, userMiddleware);
+router.use(
+  '/user',
+  // verifyToken,
+  userMiddleware
+);
 router.use('/cart', verifyToken, cartMiddleware);
 
 module.exports = router;
