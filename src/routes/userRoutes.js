@@ -72,12 +72,12 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await controller.findUser({ email, password });
     if (!user) {
-      res.status(401).json({ error: 'this user does not exist' });
+      res.status(400).json({ error: 'this user does not exist' });
     } else {
       await newSession(req, res, user._id);
       res.status(200).json(user);

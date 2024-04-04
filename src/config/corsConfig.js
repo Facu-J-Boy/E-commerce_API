@@ -1,5 +1,5 @@
 const optionCors = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   methods: 'GET,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
