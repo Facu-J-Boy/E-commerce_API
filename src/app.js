@@ -21,13 +21,18 @@ app.use(cors(optionCors));
 app.use(
   session({
     secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     name: COOKIE_NAME,
+    cookie: {
+      secure: true, // Es importante usar 'secure' en producción para cookies con SameSite=None
+      sameSite: 'None', // Configuración de SameSite=None para compartir cookies entre dominios
+    },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
+require('./middleware/google.js')(passport);
 app.use(morgan('dev'));
 app.use('/', routes);
 
