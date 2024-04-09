@@ -51,7 +51,7 @@ router.get('/session/:id', async (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
   try {
     const findUser = await controller.findUserForEmail({
       email,
@@ -60,7 +60,6 @@ router.post('/signup', async (req, res) => {
       res.status(402).json({ error: 'existing user' });
     } else {
       const newUser = await controller.createUser({
-        name,
         email,
         password,
       });

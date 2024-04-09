@@ -5,10 +5,9 @@ const {
 } = require('../middleware/password');
 
 module.exports = {
-  createUser: async ({ name, email, password }) => {
+  createUser: async ({ email, password }) => {
     const hashedPassword = hashPassword(password);
     const newUser = new User({
-      name,
       email,
       password: hashedPassword,
     });
@@ -21,21 +20,15 @@ module.exports = {
     });
   },
   findUser: async ({ email, password }) => {
-    const user = await User.findOne(
-      {
-        email,
-      },
-      { password: 0 }
-    );
+    const user = await User.findOne({
+      email,
+    });
     if (!user) {
       return null;
     }
-    const passwordMatch = verifyPassword(
-      password,
-      hashPassword(password)
-    );
+    const passwordMatch = verifyPassword(password, user.password);
     if (passwordMatch) {
-      return user;
+      return { _id: user._id, email: user.email };
     }
   },
   findUserForEmail: async ({ email }) => {
