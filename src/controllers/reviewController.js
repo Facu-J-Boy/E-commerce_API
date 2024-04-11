@@ -17,7 +17,7 @@ module.exports = {
     await Product.findByIdAndUpdate(productId, {
       $push: { review: newReview._id },
     });
-    await controller.updateProductRating(productId);
+    await controller.updateProductRating(productId, 1);
     return newReview; // Devolver el nuevo comentario creado
   },
   getReviews: async (id, Page, Limit) => {
@@ -47,12 +47,12 @@ module.exports = {
       rating,
     });
     await updateReview.save();
-    await controller.updateProductRating(review.product);
+    await controller.updateProductRating(review.product, 0);
   },
   dropReview: async (id) => {
     const review = await Review.findById(id);
     const drop = await Review.deleteOne({ _id: id });
     await drop.deletedCount;
-    await controller.updateProductRating(review.product);
+    await controller.updateProductRating(review.product, -1);
   },
 };

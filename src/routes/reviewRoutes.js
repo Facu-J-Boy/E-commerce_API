@@ -30,21 +30,25 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.put('/update/:id', async (req, res) => {
-  const { id } = req.params;
+router.put('/update/:reviewId', async (req, res) => {
+  const { reviewId } = req.params;
   const { text, rating } = req.body;
   try {
-    const update = await controller.updateReview(id, text, rating);
+    const update = await controller.updateReview(
+      reviewId,
+      text,
+      rating
+    );
     res.status(200).json(update);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
 });
 
-router.delete('/delete/:id', async (req, res) => {
-  const { id } = req.params;
+router.delete('/delete/:reviewId', async (req, res) => {
+  const { reviewId } = req.params;
   try {
-    const deleteReview = await controller.dropReview(id);
+    const deleteReview = await controller.dropReview(reviewId);
     res.status(200).json(deleteReview);
   } catch (error) {
     res.status(404).json({ error: error.message });
