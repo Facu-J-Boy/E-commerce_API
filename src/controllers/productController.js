@@ -33,7 +33,7 @@ module.exports = {
       price,
       description,
       image,
-      category: category._id,
+      category: category?._id,
     });
     await newProduct.save();
   },
@@ -146,7 +146,8 @@ module.exports = {
     );
     const averageRating = totalRating / reviews.length;
     await Product.findByIdAndUpdate(id, {
-      rating: averageRating.toFixed(1),
+      $set: { 'rating.rate': averageRating.toFixed(1) },
+      $inc: { 'rating.count': 1 }, // incrementamos por uno la cantidad de reviews
     });
   },
 };

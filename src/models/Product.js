@@ -12,8 +12,14 @@ const Product = new Schema(
       required: true,
     },
     rating: {
-      type: Number,
-      default: 5,
+      rate: {
+        type: Number,
+        default: 5,
+      },
+      count: {
+        type: Number,
+        default: 0,
+      },
     },
     description: {
       type: String,
