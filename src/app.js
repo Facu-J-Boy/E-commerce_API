@@ -6,6 +6,7 @@ const routes = require('./routes/index.js');
 const passport = require('passport');
 const session = require('express-session');
 const { optionCors } = require('./config/corsConfig.js');
+const path = require('path');
 require('dotenv').config();
 
 const { SESSION_SECRET, COOKIE_NAME } = process.env;
@@ -30,10 +31,13 @@ app.use(
     },
   })
 );
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, '../uploads'))
+);
 app.use(passport.initialize());
 app.use(passport.session());
 require('./middleware/google.js')(passport);
 app.use(morgan('dev'));
 app.use('/', routes);
-
 module.exports = app;

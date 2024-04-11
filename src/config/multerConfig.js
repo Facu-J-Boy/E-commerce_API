@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const uuid = require('uuid');
 
-const FOLDER_UPLOADS = 'uploads';
+const FOLDER_UPLOADS = 'uploads/';
 
 const generatorNameImage = (file) =>
   `${uuid.v4()}${path.extname(file.originalname)}`;

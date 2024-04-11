@@ -4,6 +4,9 @@ const controller = require('../controllers/productController');
 const { upload } = require('../config/multerConfig');
 const categoryController = require('../controllers/categoryController');
 const { category, products } = require('../controllers/products');
+require('dotenv').config();
+
+const { SERVER_URL } = process.env;
 
 router.post('/create', upload, async (req, res) => {
   const { title, price, description, categoryId } = req.body;
@@ -13,7 +16,7 @@ router.post('/create', upload, async (req, res) => {
       title,
       price,
       description,
-      image: imagePath,
+      image: `${SERVER_URL}/${imagePath}`,
       categoryId,
     });
     res.status(200).json(newProduct);

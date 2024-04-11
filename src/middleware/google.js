@@ -3,7 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config();
 const User = require('../models/User');
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SERVER_URL } =
+  process.env;
 
 module.exports = function (passport) {
   passport.use(
@@ -11,7 +12,7 @@ module.exports = function (passport) {
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://localhost:3001/user/google',
+        callbackURL: `${SERVER_URL}/user/google`,
         session: false,
       },
       async (accessToken, refreshToken, profile, done) => {
