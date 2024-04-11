@@ -135,7 +135,7 @@ module.exports = {
       };
     }
   },
-  updateProductRating: async (id, number) => {
+  updateProductRating: async (id) => {
     const reviews = await Review.find({ product: id });
     if (reviews.length === 0) {
       return;
@@ -146,8 +146,7 @@ module.exports = {
     );
     const averageRating = totalRating / reviews.length;
     await Product.findByIdAndUpdate(id, {
-      $set: { 'rating.rate': averageRating.toFixed(1) },
-      $inc: { 'rating.count': number }, // incrementamos por uno la cantidad de reviews
+      $set: { rating: averageRating.toFixed(1) },
     });
   },
 };
