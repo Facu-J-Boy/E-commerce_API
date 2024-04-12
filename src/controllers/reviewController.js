@@ -33,12 +33,18 @@ module.exports = {
     const totalCount = await Review.countDocuments({
       product: id,
     });
-    return {
+    let response = {
       reviews,
       currentPage: page,
       totalPages: Math.ceil(totalCount / limit),
       totalCount,
+      message: '',
     };
+    // Si no hay comentarios manda un mensaje
+    if (!totalCount) {
+      response.message = 'There are no comments';
+    }
+    return response;
   },
   updateReview: async (id, text, rating) => {
     const review = await Review.findById(id);
