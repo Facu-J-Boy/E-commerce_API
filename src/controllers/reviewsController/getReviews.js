@@ -21,12 +21,7 @@ module.exports = {
       currentPage: page,
       totalPages: Math.ceil(totalCount / limit),
       totalCount,
-      message: '',
     };
-    // Si no hay comentarios manda un mensaje
-    if (!totalCount) {
-      response.message = 'There are no comments';
-    }
     return response;
   },
 };
