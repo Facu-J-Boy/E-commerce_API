@@ -52,7 +52,7 @@ router.delete('/delete/:reviewId', async (req, res) => {
   const { reviewId } = req.params;
   try {
     const deleteReview = await controller.dropReview(reviewId);
-    res.status(200).json(deleteReview);
+    res.status(deleteReview.status).json(deleteReview.message);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

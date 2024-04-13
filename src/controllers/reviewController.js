@@ -80,5 +80,15 @@ module.exports = {
     const drop = await Review.deleteOne({ _id: id });
     await drop.deletedCount;
     await controller.updateProductRating(review.product);
+    return {
+      status: 200,
+      message: {
+        notification: {
+          type: 'success',
+          text: 'Comment deleted',
+        },
+        review: review,
+      },
+    };
   },
 };
