@@ -4,21 +4,41 @@ const controller = require('./productController');
 
 module.exports = {
   createReview: async (productId, userId, text, rating) => {
-    // Crear un nuevo comentario
-    const newReview = new Review({
-      text,
-      rating,
-      user: userId,
-      product: productId, // Asociar el comentario al producto
-    });
-    // Guardar el comentario en la base de datos
-    await newReview.save();
-    // Agregar el ID del comentario al array de comentarios del producto
-    await Product.findByIdAndUpdate(productId, {
-      $push: { review: newReview._id },
-    });
-    await controller.updateProductRating(productId);
-    return newReview; // Devolver el nuevo comentario creado
+    if (!text) {
+      return {
+        status: 402,
+        notification: { type: 'error', text: 'Text is required' },
+      };
+    }
+    if (!userId) {
+      return {
+        status: 402,
+        notification: {
+          type: 'error',
+          text: 'You need to log in to comment',
+        },
+      };
+    } else {
+      // Crear un nuevo comentario
+      const newReview = new Review({
+        text,
+        rating,
+        user: userId,
+        product: productId, // Asociar el comentario al producto
+      });
+      // Guardar el comentario en la base de datos
+      await newReview.save();
+      // Agregar el ID del comentario al array de comentarios del producto
+      await Product.findByIdAndUpdate(productId, {
+        $push: { review: newReview._id },
+      });
+      await controller.updateProductRating(productId);
+      return {
+        status: 200,
+        notification: { type: 'success', text: 'Posted comment' },
+        newReview,
+      }; // Devolver el nuevo comentario creado
+    }
   },
   getReviews: async (id, Page, Limit) => {
     // Parámetros de paginación

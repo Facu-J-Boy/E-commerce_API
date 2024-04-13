@@ -12,9 +12,12 @@ router.post('/new/:productId', async (req, res) => {
       text,
       rating
     );
-    res.status(200).json(newReview);
+    res.status(newReview.status).json(newReview);
+    // }
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(404).json({
+      notification: { type: 'error', text: error.message },
+    });
   }
 });
 
