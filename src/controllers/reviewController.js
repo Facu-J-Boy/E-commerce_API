@@ -1,9 +1,23 @@
 const Review = require('../models/Review');
 const Product = require('../models/Product');
 const controller = require('./productController');
+const { getReviews } = require('./reviewsController/getReviews');
 
 module.exports = {
   createReview: async (productId, userId, text, rating) => {
+    // const foundReview = await Review.findOne({
+    //   user: userId,
+    //   product: productId,
+    // });
+    // if (foundReview) {
+    //   return {
+    //     status: 402,
+    //     notification: {
+    //       type: 'error',
+    //       text: 'You have already reviewed this product',
+    //     },
+    //   };
+    // }
     if (!text) {
       return {
         status: 402,
@@ -33,38 +47,17 @@ module.exports = {
         $push: { review: newReview._id },
       });
       await controller.updateProductRating(productId);
+      const allReviews = await getReviews(productId);
       return {
         status: 200,
         notification: { type: 'success', text: 'Posted comment' },
-        newReview,
+        reviews: allReviews.reviews,
+        currentPage: allReviews.currentPage,
+        totalPages: allReviews.totalPages,
+        totalCount: allReviews.totalCount,
+        message: allReviews.message,
       }; // Devolver el nuevo comentario creado
     }
-  },
-  getReviews: async (id, Page, Limit) => {
-    // Parámetros de paginación
-    const page = parseInt(Page) || 1;
-    const limit = parseInt(Limit) || 10;
-    const skip = (page - 1) * limit;
-    const reviews = await Review.find({ product: id }, { product: 0 })
-      .skip(skip)
-      .limit(limit);
-
-    // Calcular el número total de reviews
-    const totalCount = await Review.countDocuments({
-      product: id,
-    });
-    let response = {
-      reviews,
-      currentPage: page,
-      totalPages: Math.ceil(totalCount / limit),
-      totalCount,
-      message: '',
-    };
-    // Si no hay comentarios manda un mensaje
-    if (!totalCount) {
-      response.message = 'There are no comments';
-    }
-    return response;
   },
   updateReview: async (id, text, rating) => {
     const review = await Review.findById(id);

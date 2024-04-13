@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/reviewController');
+const {
+  getReviews,
+} = require('../controllers/reviewsController/getReviews');
 
 router.post('/new/:productId', async (req, res) => {
   const { productId } = req.params;
@@ -26,7 +29,7 @@ router.get('/:id', async (req, res) => {
   const { page } = req.query;
   const { limit } = req.query;
   try {
-    const reviews = await controller.getReviews(id, page, limit);
+    const reviews = await getReviews(id, page, limit);
     res.status(200).json(reviews);
   } catch (error) {
     res.status(404).json({ error: error.message });
