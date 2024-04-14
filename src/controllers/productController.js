@@ -149,4 +149,10 @@ module.exports = {
       $set: { rating: averageRating.toFixed(1) },
     });
   },
+  findByCategory: async (categoryId) => {
+    const products = await Product.find({
+      category: categoryId,
+    }).limit(20);
+    return products;
+  },
 };

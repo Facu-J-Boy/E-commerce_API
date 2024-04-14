@@ -72,6 +72,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/category/:categoryId', async (req, res) => {
+  const { categoryId } = req.params;
+  try {
+    const producstByCategory = await controller.findByCategory(
+      categoryId
+    );
+    res.status(200).json(producstByCategory);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
