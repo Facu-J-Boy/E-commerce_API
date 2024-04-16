@@ -57,11 +57,20 @@ module.exports = {
     const totalCount = await Product.countDocuments({
       title: { $regex: title, $options: 'i' },
     });
+
+    let message = '';
+    if (!products.length) {
+      message = 'There are no products with that name';
+    } else {
+      message = '';
+    }
     return {
+      title,
       products,
       currentPage: page,
       totalPages: Math.ceil(totalCount / limit),
       totalCount,
+      message,
     };
   },
   getSingleProduct: async (id) => {
