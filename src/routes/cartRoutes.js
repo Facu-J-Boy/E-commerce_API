@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/cartController');
+const { getCart } = require('../controllers/cartController/getCart');
 
 router.get('/:userId', async (req, res) => {
   const { userId } = req.params;
   try {
-    const cart = await controller.getCart(userId);
+    const cart = await getCart(userId);
     res.status(200).json(cart);
   } catch (error) {
     res.status(404).json({ error: error.message });

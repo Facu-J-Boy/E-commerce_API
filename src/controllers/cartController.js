@@ -1,27 +1,14 @@
 const Cart = require('../models/Cart');
+const { getCart } = require('./cartController/getCart');
 
 module.exports = {
-  getCart: async (userId) => {
-    const cart = await Cart.findOne({ user: userId }).populate(
-      'products'
-    );
-    if (!cart) {
-      const newCart = new Cart({
-        user: userId,
-      });
-      await newCart.save();
-      return newCart;
-    } else {
-      return cart;
-    }
-  },
   addToCart: async (userId, productId) => {
     const cart = await Cart.findOne({ user: userId });
     // Agregar el producto al carrito
     cart.products.push(productId);
     // Guardar el carrito actualizado
     await cart.save();
-    return cart.populate('products');
+    return await getCart(userId);
   },
   removeFromCart: async (userId, productId) => {
     const cart = await Cart.findOne({ user: userId });
@@ -32,6 +19,6 @@ module.exports = {
 
     // Guardar el carrito actualizado
     await cart.save();
-    return cart.populate('products');
+    return await getCart(userId);
   },
 };
