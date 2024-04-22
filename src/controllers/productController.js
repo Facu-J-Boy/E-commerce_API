@@ -19,6 +19,7 @@ module.exports = {
       category: categoryId,
     });
     await newProduct.save();
+    return { type: 'success', text: 'Product created' };
   },
   bulckCreateProduct: async ({
     title,
