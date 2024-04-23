@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 const Category = require('../models/Category');
@@ -9,6 +10,7 @@ module.exports = {
     price,
     description,
     image,
+    imageFile,
     categoryId,
   }) => {
     const newProduct = new Product({
@@ -16,6 +18,7 @@ module.exports = {
       price,
       description,
       image,
+      imageFile,
       category: categoryId,
     });
     await newProduct.save();
@@ -50,7 +53,7 @@ module.exports = {
     // Trae todos los productos excluyendo sus reviews y category
     const products = await Product.find(
       { title: { $regex: title, $options: 'i' } },
-      { review: 0, category: 0 }
+      { review: 0, category: 0, imageFile: 0 }
     )
       .skip(skip)
       .limit(limit);
@@ -75,7 +78,9 @@ module.exports = {
     };
   },
   getSingleProduct: async (id) => {
-    return await Product.findById(id).populate('category');
+    return await Product.findById(id, { imageFile: 0 }).populate(
+      'category'
+    );
   },
   dropProduct: async (id) => {
     const product = await Product.findById(id);
@@ -83,13 +88,17 @@ module.exports = {
     if (!product) {
       return {
         status: 401,
-        type: 'error',
-        message: 'Product not found',
+        response: {
+          notification: {
+            type: 'error',
+            text: 'Product not found',
+          },
+        },
       };
     }
     // Eliminar la imagen asociada del sistema de archivos
-    if (product.image) {
-      fs.unlinkSync(product.image);
+    if (product.imageFile) {
+      fs.unlinkSync(product.imageFile);
     }
 
     // Eliminar todas las reviews asociadas con el producto
@@ -100,8 +109,13 @@ module.exports = {
     await drop.deletedCount;
     return {
       status: 200,
-      type: 'success',
-      message: 'Product deleted',
+      response: {
+        notification: {
+          type: 'success',
+          text: 'Product deleted',
+        },
+        productDeleted: product,
+      },
     };
   },
   updateProduct: async (

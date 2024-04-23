@@ -23,6 +23,10 @@ const Product = new Schema(
       type: String,
       required: true,
     },
+    imageFile: {
+      type: String,
+      default: '',
+    },
     category: { type: Schema.Types.ObjectId, ref: 'Category' },
   },
   { versionKey: false }

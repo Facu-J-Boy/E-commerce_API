@@ -17,6 +17,7 @@ router.post('/create', upload, async (req, res) => {
       price,
       description,
       image: `${SERVER_URL}/${imagePath}`,
+      imageFile: imagePath,
       categoryId,
     });
     res.status(200).json(newProduct);
@@ -98,10 +99,7 @@ router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const deleteProduct = await controller.dropProduct(id);
-    res.status(deleteProduct.status).json({
-      type: deleteProduct.type,
-      message: deleteProduct.message,
-    });
+    res.status(deleteProduct.status).json(deleteProduct.response);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
