@@ -120,7 +120,7 @@ module.exports = {
   },
   updateProduct: async (
     id,
-    { title, price, description, image, categoryId }
+    { title, price, description, image, imageFile, categoryId }
   ) => {
     // Buscar el producto actual en la base de datos
     const product = await Product.findById(id);
@@ -129,8 +129,10 @@ module.exports = {
       fs.unlinkSync(image);
       return {
         status: 401,
-        type: 'error',
-        message: 'Product not found',
+        notification: {
+          type: 'error',
+          text: 'Product not found',
+        },
       };
     } else {
       // Actualizar la información del producto en la base de datos
@@ -139,14 +141,15 @@ module.exports = {
         description,
         price,
         category: categoryId,
+        image,
         // Si se cargó una nueva imagen, actualizar la ruta de la imagen
-        ...(image && { image: image }),
+        ...(imageFile && { imageFile: imageFile }),
       });
 
       // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
-      if (image && product.image) {
+      if (product.imageFile) {
         // Eliminar la imagen anterior del sistema de archivos
-        fs.unlinkSync(product.image);
+        fs.unlinkSync(product.imageFile);
       }
 
       // Guardar los cambios en la base de datos
@@ -154,8 +157,10 @@ module.exports = {
 
       return {
         status: 200,
-        type: 'success',
-        message: 'Product updated',
+        notification: {
+          type: 'success',
+          text: 'Product updated',
+        },
       };
     }
   },

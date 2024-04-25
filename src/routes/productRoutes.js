@@ -10,6 +10,7 @@ const { SERVER_URL } = process.env;
 
 router.post('/create', upload, async (req, res) => {
   const { title, price, description, categoryId } = req.body;
+  console.log('body2:', req.body);
   try {
     const imagePath = req.file.path;
     const newProduct = await controller.createProduct({
@@ -21,6 +22,25 @@ router.post('/create', upload, async (req, res) => {
       categoryId,
     });
     res.status(200).json(newProduct);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.put('/update/:id', upload, async (req, res) => {
+  const { id } = req.params;
+  const { title, price, description, categoryId } = req.body;
+  try {
+    const imagePath = req.file.path;
+    const update = await controller.updateProduct(id, {
+      title,
+      price,
+      description,
+      image: `${SERVER_URL}/${imagePath}`,
+      imageFile: imagePath,
+      categoryId,
+    });
+    res.status(update.status).json(update.notification);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
@@ -100,26 +120,6 @@ router.delete('/delete/:id', async (req, res) => {
   try {
     const deleteProduct = await controller.dropProduct(id);
     res.status(deleteProduct.status).json(deleteProduct.response);
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-});
-
-router.put('/update/:id', upload, async (req, res) => {
-  const { id } = req.params;
-  const { title, price, description, categoryId } = req.body;
-  try {
-    const imagePath = req.file.path;
-    const update = await controller.updateProduct(id, {
-      title,
-      price,
-      description,
-      image: imagePath,
-      categoryId,
-    });
-    res
-      .status(update.status)
-      .json({ type: update.type, message: update.message });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
