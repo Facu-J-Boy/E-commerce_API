@@ -118,15 +118,55 @@ module.exports = {
       },
     };
   },
+  updateProductImage: async (id, { image, imageFile }) => {
+    const product = await Product.findById(id);
+    if (!product) {
+      return {
+        status: 401,
+        response: {
+          notification: {
+            type: 'error',
+            text: 'Product not found',
+          },
+        },
+      };
+    }
+    await Product.findByIdAndUpdate(id, {
+      image,
+      // Si se cargó una nueva imagen, actualizar la ruta de la imagen
+      ...(imageFile && { imageFile: imageFile }),
+      // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
+    });
+
+    if (product.imageFile) {
+      // Eliminar la imagen anterior del sistema de archivos
+      fs.unlinkSync(product.imageFile);
+    }
+
+    // Guardar los cambios en la base de datos
+    await product.save();
+
+    const updatedImage = await Product.findById(id);
+
+    return {
+      status: 200,
+      response: {
+        notification: {
+          type: 'success',
+          text: 'Image updated',
+        },
+        image: updatedImage.image,
+      },
+    };
+  },
   updateProduct: async (
     id,
-    { title, price, description, image, imageFile, categoryId }
+    { title, price, description, categoryId }
   ) => {
     // Buscar el producto actual en la base de datos
     const product = await Product.findById(id);
 
     if (!product) {
-      fs.unlinkSync(image);
       return {
         status: 401,
         notification: {
@@ -134,35 +174,24 @@ module.exports = {
           text: 'Product not found',
         },
       };
-    } else {
-      // Actualizar la información del producto en la base de datos
-      await Product.findByIdAndUpdate(id, {
-        title,
-        description,
-        price,
-        category: categoryId,
-        image,
-        // Si se cargó una nueva imagen, actualizar la ruta de la imagen
-        ...(imageFile && { imageFile: imageFile }),
-      });
-
-      // Si se cargó una nueva imagen, eliminar la imagen anterior del sistema de archivos
-      if (product.imageFile) {
-        // Eliminar la imagen anterior del sistema de archivos
-        fs.unlinkSync(product.imageFile);
-      }
-
-      // Guardar los cambios en la base de datos
-      await product.save();
-
-      return {
-        status: 200,
-        notification: {
-          type: 'success',
-          text: 'Product updated',
-        },
-      };
     }
+    // Actualizar la información del producto en la base de datos
+    await Product.findByIdAndUpdate(id, {
+      title,
+      price,
+      description,
+      category: categoryId,
+    });
+    // Guardar los cambios en la base de datos
+    await product.save();
+
+    return {
+      status: 200,
+      notification: {
+        type: 'success',
+        text: 'Product updated',
+      },
+    };
   },
   updateProductRating: async (id) => {
     const reviews = await Review.find({ product: id });

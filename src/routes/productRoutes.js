@@ -27,17 +27,28 @@ router.post('/create', upload, async (req, res) => {
   }
 });
 
-router.put('/update/:id', upload, async (req, res) => {
+router.put('/updateImage/:id', upload, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const imagePath = req.file.path;
+    const updateImage = await controller.updateProductImage(id, {
+      image: `${SERVER_URL}/${imagePath}`,
+      imageFile: imagePath,
+    });
+    res.status(updateImage.status).json(updateImage.response);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
   const { title, price, description, categoryId } = req.body;
   try {
-    const imagePath = req.file.path;
     const update = await controller.updateProduct(id, {
       title,
       price,
       description,
-      image: `${SERVER_URL}/${imagePath}`,
-      imageFile: imagePath,
       categoryId,
     });
     res.status(update.status).json(update.notification);
