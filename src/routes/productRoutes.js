@@ -120,7 +120,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const singleProduct = await controller.getSingleProduct(id);
-    res.status(200).json(singleProduct);
+    res.status(singleProduct.status).json(singleProduct.response);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

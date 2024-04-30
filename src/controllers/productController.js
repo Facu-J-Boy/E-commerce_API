@@ -78,9 +78,36 @@ module.exports = {
     };
   },
   getSingleProduct: async (id) => {
-    return await Product.findById(id, { imageFile: 0 }).populate(
-      'category'
-    );
+    try {
+      const product = await Product.findById(id, {
+        imageFile: 0,
+      }).populate('category');
+      if (!product) {
+        console.log('product: ', product);
+        return {
+          status: 404,
+          response: {
+            product: {},
+            message: 'Product not found',
+          },
+        };
+      }
+      return {
+        status: 200,
+        response: {
+          product,
+          message: '',
+        },
+      };
+    } catch (error) {
+      return {
+        status: 500, // Internal Server Error
+        response: {
+          product: {},
+          message: 'Error fetching product',
+        },
+      };
+    }
   },
   dropProduct: async (id) => {
     const product = await Product.findById(id);

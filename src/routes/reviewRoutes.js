@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
   const { limit } = req.query;
   try {
     const reviews = await getReviews(id, page, limit);
-    res.status(200).json(reviews);
+    res.status(reviews.status).json(reviews.response);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
