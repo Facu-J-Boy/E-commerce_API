@@ -44,6 +44,7 @@ module.exports = {
   deleteAll: async () => {
     await Category.deleteMany({});
     await Product.deleteMany({});
+    await Review.deleteMany({});
   },
   getAllProductsWithPagination: async (Page, Limit, title) => {
     // Parámetros de paginación
@@ -64,7 +65,7 @@ module.exports = {
 
     let message = '';
     if (!products.length) {
-      message = 'There are no products with that name';
+      message = 'Products not found';
     } else {
       message = '';
     }
