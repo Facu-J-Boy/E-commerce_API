@@ -21,15 +21,19 @@ module.exports = {
     if (!text) {
       return {
         status: 402,
-        notification: { type: 'error', text: 'Text is required' },
+        response: {
+          notification: { type: 'error', text: 'Text is required' },
+        },
       };
     }
     if (!userId) {
       return {
         status: 402,
-        notification: {
-          type: 'error',
-          text: 'You need to log in to comment',
+        response: {
+          notification: {
+            type: 'error',
+            text: 'You need to log in to comment',
+          },
         },
       };
     } else {
@@ -50,13 +54,15 @@ module.exports = {
       const allReviews = await getReviews(productId);
       return {
         status: 200,
-        notification: { type: 'success', text: 'Posted comment' },
-        reviews: allReviews.reviews,
-        currentPage: allReviews.currentPage,
-        totalPages: allReviews.totalPages,
-        totalCount: allReviews.totalCount,
-        message: allReviews.message,
-      }; // Devolver el nuevo comentario creado
+        response: {
+          notification: { type: 'success', text: 'Posted comment' },
+          reviews: allReviews.response.reviews,
+          currentPage: allReviews.response.currentPage,
+          totalPages: allReviews.response.totalPages,
+          totalCount: allReviews.response.totalCount,
+          message: allReviews.response.message,
+        },
+      };
     }
   },
   updateReview: async (id, text, rating) => {
