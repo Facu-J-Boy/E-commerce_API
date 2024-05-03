@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 const {
   verifyPassword,
   hashPassword,
@@ -34,5 +35,30 @@ module.exports = {
   findUserForEmail: async ({ email }) => {
     const user = await User.findOne({ email });
     return user;
+  },
+  deleteUser: async (id) => {
+    try {
+      await User.findByIdAndDelete(id);
+      await Cart.deleteOne({ user: id });
+      return {
+        status: 200,
+        response: {
+          notification: {
+            type: 'success',
+            text: 'User deleted',
+          },
+        },
+      };
+    } catch (error) {
+      return {
+        status: 401,
+        response: {
+          notification: {
+            type: 'error',
+            text: 'Something went wrong try again',
+          },
+        },
+      };
+    }
   },
 };

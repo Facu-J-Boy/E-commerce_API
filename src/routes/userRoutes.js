@@ -95,4 +95,14 @@ router.get('/logout', (req, res) => {
   }
 });
 
+router.delete('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const dropUser = await controller.deleteUser(id);
+    res.status(dropUser.status).json(dropUser.response);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
 module.exports = router;

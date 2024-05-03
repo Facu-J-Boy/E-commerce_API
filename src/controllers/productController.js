@@ -3,6 +3,7 @@ const path = require('path');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 const Category = require('../models/Category');
+const Cart = require('../models/Cart');
 
 module.exports = {
   createProduct: async ({
@@ -45,6 +46,7 @@ module.exports = {
     await Category.deleteMany({});
     await Product.deleteMany({});
     await Review.deleteMany({});
+    await Cart.deleteMany({});
   },
   getAllProductsWithPagination: async (Page, Limit, title) => {
     // Parámetros de paginación
