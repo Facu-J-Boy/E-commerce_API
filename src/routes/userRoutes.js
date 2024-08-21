@@ -67,12 +67,14 @@ router.post('/signup', async (req, res) => {
       res.status(200).json(newUser);
     }
   } catch (err) {
+    console.log('Error: ', err);
     res.status(401).json({ error: err.message });
   }
 });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log('body: ', req.body);
   try {
     const user = await controller.findUser({ email, password });
     if (!user) {
@@ -82,6 +84,7 @@ router.post('/login', async (req, res) => {
       res.status(200).json(user);
     }
   } catch (err) {
+    console.log('Error: ', err);
     res.status(401).json({ error: err.message });
   }
 });

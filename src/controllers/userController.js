@@ -47,6 +47,7 @@ module.exports = {
             type: 'success',
             text: 'User deleted',
           },
+          deletedUserId: id,
         },
       };
     } catch (error) {

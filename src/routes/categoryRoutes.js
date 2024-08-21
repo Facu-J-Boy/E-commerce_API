@@ -25,7 +25,7 @@ router.delete('/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const deleteCategory = await controller.dropCategory(id);
-    res.status(200).json(deleteCategory);
+    res.status(deleteCategory.status).json(deleteCategory.response);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
