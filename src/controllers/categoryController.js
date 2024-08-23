@@ -41,5 +41,11 @@ module.exports = {
       name,
     });
     await updateCategory.save();
+    return {
+      notification: {
+        type: 'success',
+        text: 'Category updated',
+      },
+    };
   },
 };
