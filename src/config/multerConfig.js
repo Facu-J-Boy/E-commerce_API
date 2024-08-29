@@ -25,5 +25,21 @@ const upload = multer({
 });
 
 module.exports = {
-  upload: upload.single('image'),
+  uploadImage: (req, res, next) => {
+    upload.single('image')(req, res, (err) => {
+      if (err) {
+        console.log('Error to upload image');
+        return res.status(400).json({
+          notification: {
+            type: 'error',
+            msg: 'Error to upload image',
+          },
+        });
+      }
+      if (!req.file) {
+        return next(); // Continue to the next middleware if no file
+      }
+      next();
+    });
+  },
 };
