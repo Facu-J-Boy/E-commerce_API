@@ -3,8 +3,29 @@ const Product = require('../models/Product');
 
 module.exports = {
   createCategory: async (name) => {
-    const newCategory = new Category({ name });
-    await newCategory.save();
+    try {
+      const duplicateName = await Category.findOne({ name });
+      if (duplicateName) {
+        return {
+          status: 401,
+          notification: {
+            type: 'error',
+            text: 'A category with this name already exists',
+          },
+        };
+      }
+      const newCategory = new Category({ name });
+      await newCategory.save();
+      return { status: 200, newCategory };
+    } catch (error) {
+      return {
+        status: 400,
+        notification: {
+          type: 'error',
+          text: 'Error to create category',
+        },
+      };
+    }
   },
   getAllCategory: async () => {
     return await Category.find();
@@ -37,15 +58,36 @@ module.exports = {
     };
   },
   updateCategory: async (id, { name }) => {
-    const updateCategory = await Category.findByIdAndUpdate(id, {
-      name,
-    });
-    await updateCategory.save();
-    return {
-      notification: {
-        type: 'success',
-        text: 'Category updated',
-      },
-    };
+    try {
+      const duplicateName = await Category.findOne({ name });
+      if (duplicateName) {
+        return {
+          status: 401,
+          notification: {
+            type: 'error',
+            text: 'A category with this name already exists',
+          },
+        };
+      }
+      const updateCategory = await Category.findByIdAndUpdate(id, {
+        name,
+      });
+      await updateCategory.save();
+      return {
+        status: 200,
+        notification: {
+          type: 'success',
+          text: 'Category updated',
+        },
+      };
+    } catch (error) {
+      return {
+        status: 400,
+        notification: {
+          type: 'error',
+          text: 'Error to update category',
+        },
+      };
+    }
   },
 };
