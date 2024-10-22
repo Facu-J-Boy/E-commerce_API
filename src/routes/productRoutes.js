@@ -49,18 +49,24 @@ router.put('/update/:id', uploadImage, async (req, res) => {
 
 router.post('/bulckcreate', async (req, res) => {
   try {
-    category.map(async (category) => {
-      await categoryController.createCategory(category);
-    });
-    products.map(async (product) => {
-      await controller.bulckCreateProduct({
-        title: product.title,
-        price: product.price,
-        description: product.description,
-        image: product.image,
-        categoryName: product.category,
-      });
-    });
+     // Crear todas las categorías y esperar a que terminen
+    await Promise.all(
+      category.map(async (category) => {
+        await categoryController.createCategory(category);
+      })
+    );
+    // Una vez que las categorías han sido creadas, crear los productos
+    await Promise.all(
+      products.map(async (product) => {
+        await controller.bulckCreateProduct({
+          title: product.title,
+          price: product.price,
+          description: product.description,
+          image: product.image,
+          categoryName: product.category,
+        });
+      })
+    );
     res.status(200).json({ message: 'Product created' });
   } catch (error) {
     res.status(404).json({ error: error.message });

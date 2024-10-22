@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
+// require('dotenv').config();
+
+const { MONGO_URL } = process.env;
 
 // URL de conexión a la base de datos MongoDB
-const dbURI = 'mongodb://localhost:27017/e-commerce';
+// const dbURI = 'mongodb://localhost:27017/e-commerce';
+const dbURI = `${MONGO_URL}`;
 
 // Configuración de la conexión
 mongoose.connect(dbURI);

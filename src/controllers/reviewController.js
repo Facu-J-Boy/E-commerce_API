@@ -5,19 +5,21 @@ const { getReviews } = require('./reviewsController/getReviews');
 
 module.exports = {
   createReview: async (productId, userId, text, rating) => {
-    // const foundReview = await Review.findOne({
-    //   user: userId,
-    //   product: productId,
-    // });
-    // if (foundReview) {
-    //   return {        ||||   NO BORRAR ||||
-    //     status: 402,
-    //     notification: {
-    //       type: 'error',
-    //       text: 'You have already reviewed this product',
-    //     },
-    //   };
-    // }
+    const foundReview = await Review.findOne({
+      user: userId,
+      product: productId,
+    });
+    if (foundReview) {
+      return {
+        status: 402,
+        response:{
+          notification: {
+            type: 'error',
+            text: 'You have already reviewed this product',
+          },
+        }
+      };
+    }
     if (!text) {
       return {
         status: 402,
